@@ -66,10 +66,16 @@ function post( myserial){
 
 
 function showUsersOnScreen(data){
-    const childHTML=`<li id=${data.id}> ${data.amount}: ${data.description}: ${data.category}
-    <button onclick=deleteexpense("${data.id}")>Delete</button>
-    <button onclick=editexpense("${data.id}","${data.amount}","${data.description}","${data.category}")>Edit</button>
-    </li>`;
+    const childHTML = `<tr id=${data.id}>
+    <td>${data.amount}</td>
+    <td>${data.description}</td>
+    <td>${data.category}</td>
+    <td>
+      <button onclick=deleteexpense("${data.id}")>Delete</button>
+      <button onclick=editexpense("${data.id}", "${data.amount}", "${data.description}", "${data.category}")>Edit</button>
+    </td>
+  </tr>`;
+    
     list.innerHTML=list.innerHTML+childHTML;
     
 

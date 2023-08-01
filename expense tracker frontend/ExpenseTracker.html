@@ -11,9 +11,36 @@
                 margin:10px;
                 width: 949px;
             }
+            table{
+                border: 2px solid black;
+
+
+            }
+            td, th{border:2px solid black ;
+                padding:5px;
+
+            }
+            body {
+                background-image: url('light-blue.jpg');
+                background-repeat: no-repeat;
+                
+                background-position: center;
+                background-size: auto;
+                
+            }
+            .section{
+                background-color: #2d6199; /* Blue color for the top part */
+                padding: 20px;
+                color: #fff;
+                font-family: sans-serif;
+            }
         </style>
     </head>
     <body>
+        <div class="section">
+            <h1>Expense</h1>
+    
+        </div>>
         <div class="container">
             <div class="row">
                 <div class="col-6">
@@ -29,9 +56,26 @@
                         <option value="gym">Gym</option>
                     </select>
                     <input class="button" type="submit" id="Add" value="Add Expense">
-                    <ul id="list"> 
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Amount</th>
+                                <th>Description</th>
+                                <th>Category</th>
+                                <th>Action</th>
+                            </tr>
 
-                    </ul>
+                        </thead>
+                        <tbody id="list">
+
+
+                        </tbody>
+
+
+                        
+                    </table>
+                    
+                    
                     
                     
 
