@@ -22,3 +22,29 @@ exports.addUser=(req,res,next)=>{
    )
 
 }
+
+
+
+exports.checkUser=(req,res,next)=>{
+    console.log(req.body.email);
+    user.findOne({where:{email:req.body.email}  })
+    .then((user)=>{ 
+        if(user){
+            if(user.password===req.body.password){
+                res.send('User login Successful');
+
+            }
+            else{
+                res.send("Password doen'nt match");
+
+            }
+        }
+        else{
+            res.send("User does'nt exist");
+        }
+       
+     })
+    .catch((err)=>{console.log(err)});
+    
+
+}
