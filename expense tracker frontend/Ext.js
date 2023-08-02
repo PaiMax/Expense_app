@@ -53,10 +53,12 @@ function deleteexpense(id){
 
 function post( myserial){
     console.log(myserial);
-    axios.post('http://localhost:3000/postexpense', myserial)
+    const token=localStorage.getItem('token');
+    axios.post('http://localhost:3000/postexpense',myserial,{headers:{"Authorization":token}})
     .then((result)=>{
+        console.log(result);
         
-        showUsersOnScreen(result);
+        showUsersOnScreen(result.data);
         
 
 
@@ -101,7 +103,8 @@ function updateexpense(id,obj){
 
 
 document.addEventListener('DOMContentLoaded',()=>{
-    axios.get('http://localhost:3000/getexpense')
+    const token=localStorage.getItem('token');
+    axios.get('http://localhost:3000/getexpense',{headers:{"Authorization":token}})
     .then((result)=>{
         console.log(result);
         for(let i=0;i<result.data.length;i++){

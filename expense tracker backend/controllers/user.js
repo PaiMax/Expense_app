@@ -1,5 +1,6 @@
 const user=require('../model/user');
 const bcrypt=require('bcrypt');
+const token=require('jsonwebtoken');
 exports.addUser=async(req,res,next)=>{
     try{
         
@@ -17,9 +18,9 @@ exports.addUser=async(req,res,next)=>{
             password:hash
     
         })
-        res.status(201).json({message:'Successfully create new user'});
+        res.status(201).json({message:'Successfully created new user'});
     }
-    catch(err){res.send(err);}
+    catch(err){ console.log(res.status(404).send(err));}
         })
     
     
@@ -43,6 +44,11 @@ exports.addUser=async(req,res,next)=>{
 catch(err){console.log(err); res.send(err.data)};}
 
 
+function generateAccessToken(id){
+    return token.sign({userId:id},'758478734eeh48734894ye784788232hwi88y42');
+}
+
+
 
 exports.checkUser=(req,res,next)=>{
     console.log(req.body.email);
@@ -51,13 +57,18 @@ exports.checkUser=(req,res,next)=>{
         if(user){
 
             bcrypt.compare(req.body.password,user.password,(err,re)=>{
+                console.log(err);
                 if(!err){
-                    res.send('User login Successful');
+                    if(re){
+                        res.json({message:"User login Successful",token:generateAccessToken(user.id)});
+                    }
+                    else{
+                        res.send({message:"Password doen'nt match"});
+    
+                    }
+                    
                 }
-                else{
-                    res.send("Password doen'nt match");
-
-                }
+                
 
             })
             
@@ -65,7 +76,7 @@ exports.checkUser=(req,res,next)=>{
             
         }
         else{
-            res.send("User does'nt exist");
+            res.send({message:"User does'nt exist"});
         }
        
      })

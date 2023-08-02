@@ -1,15 +1,20 @@
 const expense=require('../model/expense');
+const jwt=require('jsonwebtoken');
 
 exports.addexpense=(req,res,next)=>{
-    console.log(req.body);
+    const token=req.header('Authorization');
+    console.log('token iss======================='+token);
     const amount=req.body.amount1;
     const des=req.body.dis;
     const category=req.body.category;
 
+    const user=jwt.verify(token,'758478734eeh48734894ye784788232hwi88y42');
+
     expense.create({
         amount:amount,
         description:des,
-        category:category
+        category:category,
+        userId:user.userId
 
     })
     .then(result=>{
@@ -17,7 +22,8 @@ exports.addexpense=(req,res,next)=>{
         .then((expense)=>res.send(expense))
         .catch(err=>console.log(err));
     })
-    .catch(err=>console.log(err));
+    .catch(err=>{console.log(err)
+    res.status(500).send({ message: 'An error occurred while adding the expense.' })});
 
 }
 
@@ -52,8 +58,10 @@ exports.updateexpense=(req,res,next)=>{
 
 
 exports.getexpense=(req,res,next)=>{
-    expense.findAll({attributes:['id','amount','description','category']})
+    console.log("helllo i am in get===="+req.user.id);
+    expense.findAll({where:{userId:req.user.id},attributes:['id','amount','description','category']})
     .then(user=>{
+        console.log('users are====='+user)
         res.send(user);
     })
     .catch(err=>console.log(err));

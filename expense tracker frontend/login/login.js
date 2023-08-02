@@ -9,7 +9,11 @@ function loginUser(event){
     axios.post('http://localhost:3000/user/login',{email:email.value,password:password.value})
     .then((res)=>{
         const para=document.getElementById('para');
-        para.innerText=res.data;
+        console.log(res.data.message);
+        para.innerText=res.data.message;
+        localStorage.setItem('token',res.data.token);
+        window.location.href='../ExpenseTracker.html';
+
     })
     .catch(err=>console.log(err));
 
