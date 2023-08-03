@@ -6,7 +6,7 @@
         <style>
             .row > div{
                 padding: 20px;
-                background-color: gray;
+                background-color: rgb(28, 141, 137);
                 border: 2px solid black;
                 margin:10px;
                 width: 949px;
@@ -42,7 +42,7 @@
         </div>>
         <div class="container">
             <div class="row">
-                <div class="col-6">
+                <div class="col">
                     <label for="amount"> Expense amount</label>
                     <input id="amount" type="number"  name="amount">
                     <label for="des"> Description</label>
@@ -55,6 +55,10 @@
                         <option value="gym">Gym</option>
                     </select>
                     <input class="button" type="submit" id="Add" value="Add Expense">
+                    
+                    <button class="button" type="submit" id="premium" >Buy premium</button>
+                    
+                    
                     <table>
                         <thead>
                             <tr>
@@ -82,8 +86,11 @@
 
 
                 </div>
+                
             </div>
+            
         </div>
+        <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script>
         <script src="Ext.js"></script>
     </body>

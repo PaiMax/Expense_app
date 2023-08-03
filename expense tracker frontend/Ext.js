@@ -7,6 +7,7 @@ var list=document.querySelector('#list');
 let amount=document.querySelector('#amount');
 let description=document.querySelector('#des');
 let cat=document.querySelector('#category');
+
 document.getElementById('Add').addEventListener('click',add);
 
 
@@ -45,7 +46,7 @@ function deleteexpense(id){
         list.removeChild(nodetodelte);
     }
    
-    axios.delete(`http://localhost:3000/deleteexpense/${id}`)
+    axios.delete(`http://localhost:3000/expense/deleteexpense/${id}`)
     .then((result)=>console.log('deleted'))
     .catch((err)=>console.log(err));
 
@@ -54,7 +55,7 @@ function deleteexpense(id){
 function post( myserial){
     console.log(myserial);
     const token=localStorage.getItem('token');
-    axios.post('http://localhost:3000/postexpense',myserial,{headers:{"Authorization":token}})
+    axios.post('http://localhost:3000/expense/postexpense',myserial,{headers:{"Authorization":token}})
     .then((result)=>{
         console.log(result);
         
@@ -95,7 +96,7 @@ document.querySelector('#category').value=category;
 }
 
 function updateexpense(id,obj){
-    axios.put(`http://localhost:3000/updateexpense/${id}`,obj)
+    axios.put(`http://localhost:3000/expense/updateexpense/${id}`,obj)
     .then((r)=>console.log('updated'))
     .catch(err=>console.log(err));
 }
@@ -104,7 +105,7 @@ function updateexpense(id,obj){
 
 document.addEventListener('DOMContentLoaded',()=>{
     const token=localStorage.getItem('token');
-    axios.get('http://localhost:3000/getexpense',{headers:{"Authorization":token}})
+    axios.get('http://localhost:3000/expense/getexpense',{headers:{"Authorization":token}})
     .then((result)=>{
         console.log(result);
         for(let i=0;i<result.data.length;i++){
@@ -114,3 +115,35 @@ document.addEventListener('DOMContentLoaded',()=>{
         
     })
 })
+document.getElementById('premium').addEventListener('click', premiumPost);
+
+ async function  premiumPost(){
+    
+    const token=localStorage.getItem('token');
+    
+    const response=await axios.get('http://localhost:3000/purchase/membership',{headers:{"Authorization":token}});
+    var options={
+        "key_id":response.data.key_id,
+        "order_id":response.data.order.id,
+        "handler":async function(response){
+            console.log(response.razorpay_payment_id);
+            await axios.post('http://localhost:3000/purchase/updatetransactionstatus',{payment_id:response.razorpay_payment_id},{headers:{"Authorization":token}})
+            alert('you are now a premium user');
+        }
+    
+
+    };
+    const razer=new Razorpay(options);
+    razer.open();
+    //e.preventDefault();
+    razer.on('payment.failed',function(response){
+        console.log(response);
+        alert('somthing went wrong');
+    })
+
+    
+}
+
+
+
+

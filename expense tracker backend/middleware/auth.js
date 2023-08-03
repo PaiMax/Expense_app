@@ -8,10 +8,11 @@ const authentication=(req,res,next)=>{
     User.findByPk(user.userId)
     .then((user)=>{
         console.log(user);
-        req.user=user.dataValues;
+        req.user=user;
         next();
     })
-    .catch((err)=>{console.log(err)
+    .catch((err)=>{console.log('in middleware/auth');
+        console.log(err)
     res.status(401).json({success:false})});
 
 

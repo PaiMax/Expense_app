@@ -6,21 +6,30 @@ const app=express();
 
 const expenseRoutes=require('./routes/expenseroute');
 const userRoutes=require('./routes/user');
+const purchaseRoutes=require('./routes/purchase');
 
 const expense=require('./model/expense');
 const user=require('./model/user');
 var cors=require('cors');
+const order = require('./model/orders');
 app.use(cors());
 app.use(bodyParser.json({extended:false}));
+require('dotenv').config();
+
 
 
 app.use('/user',userRoutes);
 
 
-app.use(expenseRoutes);
+app.use('/expense',expenseRoutes);
+
+app.use('/purchase',purchaseRoutes);
 
 user.hasMany(expense,{constraints: true,onDelete:'CASCADE'});
 expense.belongsTo(user);
+
+user.hasMany(order);
+order.belongsTo(user);
 
 
 
