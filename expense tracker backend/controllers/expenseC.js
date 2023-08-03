@@ -1,9 +1,10 @@
 const expense=require('../model/expense');
 const jwt=require('jsonwebtoken');
+const userTabel=require('../model/user');
 
 exports.addexpense=(req,res,next)=>{
     const token=req.header('Authorization');
-    console.log('token iss======================='+token);
+    //console.log('token iss======================='+token);
     const amount=req.body.amount1;
     const des=req.body.dis;
     const category=req.body.category;
@@ -19,7 +20,19 @@ exports.addexpense=(req,res,next)=>{
     })
     .then(result=>{
         expense.findByPk(result.id,{ attributes : ['id','amount','description','category']})
-        .then((expense)=>res.send(expense))
+        .then(async (expenseData)=>{
+            const amountUser=await userTabel.findByPk(user.userId,{attributes:['totalamount']})
+            console.log('type==='+typeof amount);
+            const amountParse=parseInt(amount);
+            
+            amountUser.dataValues.totalamount+=amountParse;
+            console.log("total amount="+amountUser.dataValues.totalamount);
+            await userTabel.update({totalamount:amountUser.dataValues.totalamount},{where:{id:user.userId}})
+            console.log("expense-----------"+expenseData);
+            res.send(expenseData);
+
+
+        })
         .catch(err=>console.log(err));
     })
     .catch(err=>{console.log(err)
@@ -60,11 +73,11 @@ exports.updateexpense=(req,res,next)=>{
 exports.getexpense=(req,res,next)=>{
 console.log("helllo i am in get===="+req.user.id);
    expense.findAll({where:{userId:req.user.id},attributes:['id','amount','description','category']})
-    .then(user=>{
-        console.log('users are====='+user)
+    .then(userdata=>{
+        console.log('users are====='+userdata)
         
 
-        return res.json({user:req.user});
+        return res.json({user:userdata});
     })
     .catch(err=>console.log(err));
 }

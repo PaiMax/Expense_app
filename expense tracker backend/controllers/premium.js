@@ -7,14 +7,7 @@ exports.showleader= async (req,res,next)=>{
     try{
 
         const leaders=await user.findAll({
-            attributes:['id','name',[Sequelize.fn('sum',sequelize.col('expenses.amount')),'totalamount']],
-            include:[
-                {
-                    model:expense,
-                    attributes:[]
-                }
-            ],
-            group:['user.id'],
+            attributes:['name','totalamount'],
             order:[['totalamount','DESC']]
         })
         res.json(leaders);

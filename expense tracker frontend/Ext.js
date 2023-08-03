@@ -7,6 +7,8 @@ var list=document.querySelector('#list');
 let amount=document.querySelector('#amount');
 let description=document.querySelector('#des');
 let cat=document.querySelector('#category');
+//const observer = new MutationObserver(at); 
+//observer.observe(document, { childList: true, subtree: true });
 
 document.getElementById('Add').addEventListener('click',add);
 
@@ -32,7 +34,7 @@ document.getElementById('Add').addEventListener('click',add);
 
     }
     else{
-        post( obj);
+        post(obj);
 
     }
     
@@ -53,13 +55,12 @@ function deleteexpense(id){
 }
 
 function post( myserial){
-    console.log(myserial);
+    
     const token=localStorage.getItem('token');
     axios.post('http://localhost:3000/expense/postexpense',myserial,{headers:{"Authorization":token}})
     .then((result)=>{
         console.log(result);
-        
-        showUsersOnScreen(result.data);
+         showUsersOnScreen(result);
         
 
 
@@ -103,51 +104,57 @@ function updateexpense(id,obj){
 
 
 
-document.addEventListener('DOMContentLoaded',()=>{
+document.addEventListener('DOMContentLoaded',at)
+function at(){
     
-    const token=localStorage.getItem('token');
-    const premium=localStorage.getItem('premium');
-    const prebtn=document.getElementById('premium');
-
-    if(premium=='true'){
-        prebtn.classList.add('premium');
-        const message=document.getElementById('premiumMessage');
-        message.innerText='You are a premium user';
-        const button=`<button onclick="showleader()"class="button" id="leaderboard">Show Leaderboard</button>`;
-        const div=document.getElementById('leader');
-        div.innerHTML=button;
+    
+        const token=localStorage.getItem('token');
+        const premium=localStorage.getItem('premium');
+        const prebtn=document.getElementById('premium');
+    
+        if(premium=='true'){
+            prebtn.classList.add('premium');
+            const message=document.getElementById('premiumMessage');
+            const div=document.getElementById('leader');
+            message.innerText='You are a premium user';
+            const button=`<button onclick="showleader()"class="bu" id="leaderboard">Show Leaderboard</button>`;
+            div.innerHTML=button;
+           
         
-
-    }
-    
-
-   
-    
-   axios.get('http://localhost:3000/expense/getexpense',{headers:{"Authorization":token}})
-   .then((result)=>{
-           // console.log(result);
-            console.log(result.data.ispre);
-            //console.log(result.data);
-
-            //if(result.data.ispre==true){
-                //onst premiumbtn=document.getElementById('premium');
-                //premiumbtn.remove();
-
-            //}
-
             
-            for(let i=0;i<result.data.user.length;i++){
+            
+    
+        }
+        
+    
+       
+        
+       axios.get('http://localhost:3000/expense/getexpense',{headers:{"Authorization":token}})
+       .then((result)=>{
+               // console.log(result);
+                console.log(result.data);
+                //console.log(result.data);
+    
+                //if(result.data.ispre==true){
+                    //onst premiumbtn=document.getElementById('premium');
+                    //premiumbtn.remove();
+    
+                //}
+    
                 
-                showUsersOnScreen(result.data[i]);
-            }
-            
-        })
+                for(let i=0;i<result.data.user.length;i++){
+                    
+                    showUsersOnScreen(result.data.user[i]);
+                }
+                
+            })
+        
+        .catch(err=>console.log(err));
     
-    .catch(err=>console.log(err));
+    
+       
+    }
 
-
-   
-})
 document.getElementById('premium').addEventListener('click', premiumPost);
 
  async function  premiumPost(){
@@ -169,6 +176,7 @@ document.getElementById('premium').addEventListener('click', premiumPost);
 
 
             alert('you are now a premium user');
+            
 
         }
     

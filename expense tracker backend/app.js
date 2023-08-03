@@ -30,7 +30,7 @@ app.use('/purchase',purchaseRoutes);
 user.hasMany(expense,{constraints: true,onDelete:'CASCADE'});
 expense.belongsTo(user);
 
-user.hasMany(order);
+user.hasMany(order,{constraints:true,onDelete:'CASCADE'});
 order.belongsTo(user);
 
 
