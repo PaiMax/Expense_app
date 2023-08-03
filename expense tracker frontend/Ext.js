@@ -190,7 +190,10 @@ async function showleader(){
     heading.innerText='Leader Board';
     const response=await axios.get('http://localhost:3000/premium/showleaderboard')
     for(const r of response.data){
-        const childlist=`<li>Name-${r.name} Expense-${r.amount}</li>`;
+        if(r.totalamount===null){
+            r.totalamount=0;
+        }
+        const childlist=`<li>Name-${r.name} Expense-${r.totalamount}</li>`;
         ul.innerHTML+=childlist;
         
     }
