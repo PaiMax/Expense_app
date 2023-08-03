@@ -7,6 +7,7 @@ const app=express();
 const expenseRoutes=require('./routes/expenseroute');
 const userRoutes=require('./routes/user');
 const purchaseRoutes=require('./routes/purchase');
+const premiumRoutes=require('./routes/premium');
 
 const expense=require('./model/expense');
 const user=require('./model/user');
@@ -19,6 +20,7 @@ require('dotenv').config();
 
 
 app.use('/user',userRoutes);
+app.use('/premium',premiumRoutes);
 
 
 app.use('/expense',expenseRoutes);

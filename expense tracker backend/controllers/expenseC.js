@@ -58,11 +58,13 @@ exports.updateexpense=(req,res,next)=>{
 
 
 exports.getexpense=(req,res,next)=>{
-    console.log("helllo i am in get===="+req.user.id);
-    expense.findAll({where:{userId:req.user.id},attributes:['id','amount','description','category']})
+console.log("helllo i am in get===="+req.user.id);
+   expense.findAll({where:{userId:req.user.id},attributes:['id','amount','description','category']})
     .then(user=>{
         console.log('users are====='+user)
-        res.send(user);
+        
+
+        return res.json({user:req.user});
     })
     .catch(err=>console.log(err));
 }

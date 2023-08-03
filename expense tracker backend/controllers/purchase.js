@@ -41,7 +41,7 @@ exports.updateTransaction= async (req,res)=>{
         const updatedTransaction=await order.update({paymentid:req.body.payment_id,status:'SUCCESS'},{where:{userId:req.user.id}})
         console.log(updatedTransaction);
         req.user.update({ispremiumuser:true})
-        .then(()=>{return res.status(202).json({sucess:true,message:"Transaction Successful"})})
+        .then(()=>{return res.status(202).json({sucess:true,message:"Transaction Successful",user:req.user.ispremiumuser})})
         .catch(err=>console.log(err));
         
         

@@ -12,6 +12,7 @@ function loginUser(event){
         console.log(res.data.message);
         para.innerText=res.data.message;
         localStorage.setItem('token',res.data.token);
+        localStorage.setItem('premium',res.data.premium);
         window.location.href='../ExpenseTracker.html';
 
     })

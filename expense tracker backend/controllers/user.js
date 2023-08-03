@@ -44,8 +44,8 @@ exports.addUser=async(req,res,next)=>{
 catch(err){console.log(err); res.send(err.data)};}
 
 
-function generateAccessToken(id){
-    return token.sign({userId:id},'758478734eeh48734894ye784788232hwi88y42');
+function generateAccessToken(id,pre){
+    return token.sign({userId:id,ispremiumuser:pre},'758478734eeh48734894ye784788232hwi88y42');
 }
 
 
@@ -60,7 +60,7 @@ exports.checkUser=(req,res,next)=>{
                 console.log(err);
                 if(!err){
                     if(re){
-                        res.json({message:"User login Successful",token:generateAccessToken(user.id)});
+                        res.json({message:"User login Successful",token:generateAccessToken(user.id),premium:user.ispremiumuser});
                     }
                     else{
                         res.send({message:"Password doen'nt match"});
@@ -83,4 +83,10 @@ exports.checkUser=(req,res,next)=>{
     .catch((err)=>{console.log(err)});
     
 
+}
+exports.getuser= (req,res,next)=>{
+    console.log('in geteeeee');
+    const pre=req.user.ispremiumuser;
+    console.log("in get"+pre);
+    res.send(pre);
 }
