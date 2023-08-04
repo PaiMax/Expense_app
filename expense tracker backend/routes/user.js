@@ -8,6 +8,8 @@ const authMiddleware=require('../middleware/auth');
 router.post('/signup',userController.addUser);
 
 router.post('/login',userController.checkUser);
+
+
 //router.get('/getuser',authMiddleware.authentication,userController.getuser);
 module.exports=router;
 

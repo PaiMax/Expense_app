@@ -12,6 +12,7 @@ const passwordRoutes=require('./routes/password');
 
 const expense=require('./model/expense');
 const user=require('./model/user');
+const forgot=require('./model/forgotpassword');
 var cors=require('cors');
 const order = require('./model/orders');
 app.use(cors());
@@ -35,6 +36,9 @@ expense.belongsTo(user);
 user.hasMany(order,{constraints:true,onDelete:'CASCADE'});
 order.belongsTo(user);
 
+
+user.hasMany(forgot,{constraints:true,OnDelete:'CASCADE'});
+forgot.belongsTo(user);
 
 
 
