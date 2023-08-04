@@ -60,7 +60,7 @@ function post( myserial){
     axios.post('http://localhost:3000/expense/postexpense',myserial,{headers:{"Authorization":token}})
     .then((result)=>{
         console.log(result);
-         showUsersOnScreen(result);
+         showUsersOnScreen(result.data);
         
 
 

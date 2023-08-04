@@ -1,9 +1,13 @@
 const expense=require('../model/expense');
 const jwt=require('jsonwebtoken');
 const userTabel=require('../model/user');
+const sequelize=require('../util/database');
 
-exports.addexpense=(req,res,next)=>{
-    const token=req.header('Authorization');
+exports.addexpense= async (req,res,next)=>{
+    const t= await sequelize.transaction(); 
+    try{
+        const token=req.header('Authorization');
+    
     //console.log('token iss======================='+token);
     const amount=req.body.amount1;
     const des=req.body.dis;
@@ -11,43 +15,79 @@ exports.addexpense=(req,res,next)=>{
 
     const user=jwt.verify(token,'758478734eeh48734894ye784788232hwi88y42');
 
-    expense.create({
+    const result=await expense.create({
         amount:amount,
         description:des,
         category:category,
         userId:user.userId
 
-    })
-    .then(result=>{
-        expense.findByPk(result.id,{ attributes : ['id','amount','description','category']})
-        .then(async (expenseData)=>{
-            const amountUser=await userTabel.findByPk(user.userId,{attributes:['totalamount']})
+    },{transaction:t});
+    console.log(result);
+    
+        //const expenseData =await expense.findByPk(result.dataValues.id,{ attributes : ['id','amount','description','category']})
+        //console.log(expenseData);
+        const amountUser=await userTabel.findByPk(user.userId,{attributes:['totalamount']})
+            console.log("amount user----"+amountUser.dataValues.totalamount);
             console.log('type==='+typeof amount);
             const amountParse=parseInt(amount);
             
             amountUser.dataValues.totalamount+=amountParse;
             console.log("total amount="+amountUser.dataValues.totalamount);
-            await userTabel.update({totalamount:amountUser.dataValues.totalamount},{where:{id:user.userId}})
-            console.log("expense-----------"+expenseData);
-            res.send(expenseData);
+            await userTabel.update({totalamount:amountUser.dataValues.totalamount},{where:{id:user.userId},transaction:t})
+            //console.log("expense-----------"+expenseData);
+            await t.commit();
+            const expenseData =await expense.findByPk(result.dataValues.id,{ attributes : ['id','amount','description','category']})
+            console.log(expenseData);
+            res.send(expenseData.dataValues);
+            }
+    
+    
+    catch(err){
+        t.rollback()
+        .then(()=>{console.log(err);
+            res.status(500).send({ message: 'An error occurred while adding the expense.' })})
+        .catch((err)=>console.log(err));
+        
+        
+        
 
 
-        })
-        .catch(err=>console.log(err));
-    })
-    .catch(err=>{console.log(err)
-    res.status(500).send({ message: 'An error occurred while adding the expense.' })});
-
+}
 }
 
 
 
 
-exports.removeexpense=(req,res,next)=>{
-    const idTodelete=req.params.id;
-    expense.destroy({where: {id:idTodelete }})
-    .then(data=>{console.log("deleted");res.send("deleted successful")})
-    .catch(errr=>console.log(errr));
+
+exports.removeexpense= async (req,res,next)=>{
+    const t= await sequelize.transaction(); 
+    try{
+        const idTodelete=req.params.id;
+        const amount=await expense.findOne({where :{id:idTodelete},attributes:['amount','userId']})
+        await expense.destroy({where: {id:idTodelete },transaction:t})
+        
+        const totalamount=await userTabel.findByPk(amount.dataValues.userId,{attributes:['totalamount']})
+        console.log('type==='+typeof amount);
+        console.log(totalamount);
+        
+
+
+        const newamount=totalamount.dataValues.totalamount-amount.dataValues.amount;
+
+        await userTabel.update({totalamount:newamount},{where:{id:amount.dataValues.userId},transaction:t})
+        await t.commit();
+
+        console.log('deleted');
+        res.send('deleted sucessful')
+        
+}
+catch(err){
+    await t.rollback();
+    console.log(err);
+    return res.status(500).json({success:'fail'});
+
+}
+    
 }
 
 
