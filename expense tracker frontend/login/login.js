@@ -20,3 +20,8 @@ function loginUser(event){
 
 
 }
+document.getElementById('forgot').addEventListener('click',forgotPass);
+function forgotPass(){
+    window.location.href='forgot.html';
+
+}
