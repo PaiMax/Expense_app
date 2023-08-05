@@ -63,7 +63,7 @@ exports.checkUser=(req,res,next)=>{
                         res.json({message:"User login Successful",token:generateAccessToken(user.id),premium:user.ispremiumuser});
                     }
                     else{
-                        res.send({message:"Password doen'nt match"});
+                        res.send({message:"Password does'nt match"});
     
                     }
                     

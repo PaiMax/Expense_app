@@ -118,7 +118,8 @@ function at(){
             const div=document.getElementById('leader');
             message.innerText='You are a premium user';
             const button=`<button onclick="showleader()"class="bu" id="leaderboard">Show Leaderboard</button>`;
-            div.innerHTML=button;
+            const showexpense=`<button onclick="showexpenses()"class="preex" id="preexpenses">Show expenses</button>`          
+            div.innerHTML=button+showexpense;
            
         
             
@@ -206,6 +207,10 @@ async function showleader(){
         
     }
 
+
+}
+function showexpenses(){
+    window.location.href='./premium/premiumfeature.html';
 
 }
 

@@ -11,10 +11,14 @@ function loginUser(event){
         const para=document.getElementById('para');
         console.log(res.data.message);
         para.innerText=res.data.message;
-        localStorage.setItem('token',res.data.token);
-        localStorage.setItem('premium',res.data.premium);
-        window.location.href='../ExpenseTracker.html';
+        if(res.data.message!="Password does'nt match"&& res.data.message!="User does'nt exist"){
+            localStorage.setItem('token',res.data.token);
+            localStorage.setItem('premium',res.data.premium);
+            window.location.href='../ExpenseTracker.html';
 
+
+        }
+        
     })
     .catch(err=>console.log(err));
 
