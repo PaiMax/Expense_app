@@ -2,13 +2,16 @@ const expense=require('../model/expense');
 const jwt=require('jsonwebtoken');
 const userTabel=require('../model/user');
 const sequelize=require('../util/database');
+const S3Service=require('../services/S3services');
+const fileDownloadTabel=require('../model/filedownloaded');
+
 
 exports.addexpense= async (req,res,next)=>{
     const t= await sequelize.transaction(); 
     try{
         const token=req.header('Authorization');
     
-    //console.log('token iss======================='+token);
+    
     const amount=req.body.amount1;
     const des=req.body.dis;
     const category=req.body.category;
@@ -24,8 +27,7 @@ exports.addexpense= async (req,res,next)=>{
     },{transaction:t});
     console.log(result);
     
-        //const expenseData =await expense.findByPk(result.dataValues.id,{ attributes : ['id','amount','description','category']})
-        //console.log(expenseData);
+       
         const amountUser=await userTabel.findByPk(user.userId,{attributes:['totalamount']})
             console.log("amount user----"+amountUser.dataValues.totalamount);
             console.log('type==='+typeof amount);
@@ -121,3 +123,52 @@ console.log("helllo i am in get===="+req.user.id);
     })
     .catch(err=>console.log(err));
 }
+
+
+
+exports.download=async (req,res,next)=>{
+    const t= await sequelize.transaction(); 
+
+    try{
+        const expenses=await expense.findAll({where:{userId:req.user.id}});
+    //console.log(expenses);
+    const StringExpenses=JSON.stringify(expenses);
+
+    const userid=req.user.id;
+    const fileName=`Expense${userid}/${new Date()}.txt`;
+    const fileUrl= await S3Service.uploadToS3(StringExpenses,fileName);
+    await fileDownloadTabel.create({fileurl:fileUrl,userId:req.user.id},{transaction:t});
+    await t.commit();
+
+    res.status(201).json({fileUrl,success:true});
+    }
+    catch(err){
+        await t.rollback();
+        console.log(err);
+        res.status(500).json({fileUrl:'',success:false,err:err})
+    }
+    
+
+
+
+
+    
+}
+
+
+exports.showfiledownloaded= async (req,res,next)=>{
+    try{
+        const files=await fileDownloadTabel.findAll({where:{userId:req.user.id},attributes:['fileurl','createdAt']})
+        
+        res.status(201).json({data:files});
+
+    }
+    catch(err){
+        console.log(err);
+        res.status(500).json({success:false});
+    }
+    
+
+
+}
+

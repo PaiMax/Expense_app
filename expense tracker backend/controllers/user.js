@@ -90,3 +90,6 @@ exports.getuser= (req,res,next)=>{
     console.log("in get"+pre);
     res.send(pre);
 }
+
+
+

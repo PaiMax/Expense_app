@@ -11,6 +11,7 @@ let cat=document.querySelector('#category');
 //observer.observe(document, { childList: true, subtree: true });
 
 document.getElementById('Add').addEventListener('click',add);
+const token=localStorage.getItem('token');
 
 
 
@@ -118,8 +119,25 @@ function at(){
             const div=document.getElementById('leader');
             message.innerText='You are a premium user';
             const button=`<button onclick="showleader()"class="bu" id="leaderboard">Show Leaderboard</button>`;
-            const showexpense=`<button onclick="showexpenses()"class="preex" id="preexpenses">Show expenses</button>`          
-            div.innerHTML=button+showexpense;
+            //document.getElementById('preexpenses').addEventListener('click',download);
+            //const showexpense=`<button onclick="showexpenses()"class="preex" id="preexpenses">Show expenses</button>`          
+            div.innerHTML=button;
+            axios.get('http://localhost:3000/premium/showfiledownloaded',{headers:{"Authorization":token}})
+            .then((res)=>{
+                const head=document.getElementById('filehead');
+                head.innerText='Previous files links'
+                
+                console.log(res.data.data[0].fileurl);
+                for(let i=0;i<res.data.data.length;i++){
+                    showfiles(res.data.data[i].fileurl,res.data.data[i].createdAt);
+                }
+
+                
+            })
+            .catch((err)=>console.log(err));
+
+
+
            
         
             
@@ -160,7 +178,7 @@ document.getElementById('premium').addEventListener('click', premiumPost);
 
  async function  premiumPost(){
     
-    const token=localStorage.getItem('token');
+    
     
     const response=await axios.get('http://localhost:3000/purchase/membership',{headers:{"Authorization":token}});
     var options={
@@ -209,8 +227,42 @@ async function showleader(){
 
 
 }
-function showexpenses(){
-    window.location.href='./premium/premiumfeature.html';
+function download(){
+    
+        axios.get('http://localhost:3000/user/download', { headers: {"Authorization" : token} })
+        .then((response) => {
+            
+            if(response.status === 201){
+               
+                var a = document.createElement("a");
+                a.href = response.data.fileUrl;
+                a.download = 'myexpense.csv';
+                a.click();
+            } else {
+                throw new Error(response.data.message)
+            }
+    
+        })
+        .catch((err) => {
+            showError(err)
+        });
+    
+
+}
+function showError(err){
+    document.body.innerHTML += `<div style="color:red;"> ${err}</div>`
+}
+
+
+//function showexpenses(){
+    //window.location.href='./premium/premiumfeature.html';
+
+//}
+
+function showfiles(url,date){
+    const list= `<tr><td>${date}</td><td><a href="${url}">${url}</a></td></tr>`;
+    const parent=document.getElementById('files');
+    parent.innerHTML=parent.innerHTML+list;
 
 }
 

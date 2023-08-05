@@ -37,15 +37,39 @@
             .button.premium{
                 display: none;
             }
+            
+            .filetabel {
+                width: fit-content;
+              }
+              
+              .filetabel th:nth-child(2),
+              .filetabel td:nth-child(2) {
+                max-width: 150px; /* Adjust the width as needed */
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+              }
 
         </style>
     </head>
     <body>
         <div class="section">
             <h1>Expense</h1>
+            <div>
+                <h3 id="premiumMessage" > </h3>
+                
+                
+            </div>
+            
     
         </div>>
         <div class="container">
+            <button class="preex"  onclick="download()"id="preexpenses">Download</button>
+            <div id="leader">
+            
+            
+            
+            </div>
             <div class="row">
                 <div class="col">
                     <label for="amount"> Expense amount</label>
@@ -62,6 +86,7 @@
                     <input class="button" type="submit" id="Add" value="Add Expense">
                     
                     <button class="button" type="submit" id="premium" >Buy premium</button>
+                    
                     
                     
                     <table>
@@ -95,16 +120,8 @@
             </div>
             
         </div>
-        <div id="leader">
-            
-            
-            
-        </div>
-        <div>
-            <h3 id="premiumMessage" > </h3>
-            
-            
-        </div>
+        
+        
 
         <div>
             <h2 id="phead" ></h2>
@@ -112,6 +129,40 @@
 
             </ul>
         </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-12", id="filesdiv">
+                    
+                        <h2 id="filehead" class="head"></h2>
+                        
+                        <table class="filetabel">
+                            <thead>
+                                <tr>
+                                    
+                                    <th>Time<th>
+                                    <th>Files</th>
+                                    
+                                </tr>
+            
+                            </thead>
+                            <tbody id="files">
+            
+            
+                            </tbody>
+            
+            
+                            
+                        </table>
+            
+            
+            
+                    
+
+                </div>
+            </div>
+
+        </div>
+        
         <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script>
         <script src="Ext.js"></script>

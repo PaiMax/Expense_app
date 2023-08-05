@@ -13,6 +13,7 @@ const passwordRoutes=require('./routes/password');
 const expense=require('./model/expense');
 const user=require('./model/user');
 const forgot=require('./model/forgotpassword');
+const fileDownloadTabel=require('./model/filedownloaded');
 var cors=require('cors');
 const order = require('./model/orders');
 app.use(cors());
@@ -39,6 +40,10 @@ order.belongsTo(user);
 
 user.hasMany(forgot,{constraints:true,OnDelete:'CASCADE'});
 forgot.belongsTo(user);
+
+
+user.hasMany(fileDownloadTabel,{constraints:true,OnDelete:'CASCADE'});
+fileDownloadTabel.belongsTo(user);
 
 
 
