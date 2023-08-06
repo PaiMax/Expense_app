@@ -28,15 +28,7 @@ exports.addUser=async(req,res,next)=>{
     
     
        
-        //.then(result=>{
-            //user.findByPk(result.id,{ attributes : ['id','name','email','password']})
-            //.then((user)=>res.send(user))
-            //.catch(err=>{
-                //console.log('hi');console.log(err);});
-        //})
-        
-
-    //}
+       
     
    
 
@@ -45,7 +37,7 @@ catch(err){console.log(err); res.send(err.data)};}
 
 
 function generateAccessToken(id,pre){
-    return token.sign({userId:id,ispremiumuser:pre},'758478734eeh48734894ye784788232hwi88y42');
+    return token.sign({userId:id,ispremiumuser:pre},process.env.TOKEN_COMPARE);
 }
 
 

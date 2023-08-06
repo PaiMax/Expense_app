@@ -14,8 +14,23 @@ const expense=require('./model/expense');
 const user=require('./model/user');
 const forgot=require('./model/forgotpassword');
 const fileDownloadTabel=require('./model/filedownloaded');
+const helmet=require('helmet');
+const path = require('path');
+
+
+const morgan=require('morgan');
+const fs=require('fs');
+
+
 var cors=require('cors');
 const order = require('./model/orders');
+
+
+const accessLogsStream=fs.createWriteStream(path.join(__dirname,'acess.log'),{flags:'a'});
+
+app.use(helmet());
+
+app.use(morgan('combined',{ stream:accessLogsStream}));
 app.use(cors());
 app.use(bodyParser.json({extended:false}));
 require('dotenv').config();

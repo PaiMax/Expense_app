@@ -17,7 +17,7 @@ exports.addexpense= async (req,res,next)=>{
     const des=req.body.dis;
     const category=req.body.category;
 
-    const user=jwt.verify(token,'758478734eeh48734894ye784788232hwi88y42');
+    const user=jwt.verify(token,process.env.TOKEN_COMPARE);
 
     const result=await expense.create({
         amount:amount,
