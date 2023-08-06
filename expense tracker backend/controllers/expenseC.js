@@ -4,7 +4,7 @@ const userTabel=require('../model/user');
 const sequelize=require('../util/database');
 const S3Service=require('../services/S3services');
 const fileDownloadTabel=require('../model/filedownloaded');
-const items_perpage=5;
+
 
 
 exports.addexpense= async (req,res,next)=>{
@@ -114,6 +114,7 @@ exports.updateexpense=(req,res,next)=>{
 
 
 exports.getexpense=(req,res,next)=>{
+const items_perpage=+req.query.pageSize;
 console.log("helllo i am in get===="+req.user.id);
 const page=+req.query.page||1;
 let totalItems;

@@ -115,6 +115,14 @@ function at(){
         const token=localStorage.getItem('token');
         const premium=localStorage.getItem('premium');
         const prebtn=document.getElementById('premium');
+        const dynamicPagination=document.getElementById('dynamicpagination');
+        dynamicPagination.addEventListener('click',()=>{
+            const dynamic=dynamicPagination.value;
+            localStorage.setItem('dynamicPagination',dynamic);
+
+        })
+
+        
     
         if(premium=='true'){
             prebtn.classList.add('premium');
@@ -147,11 +155,13 @@ function at(){
             
     
         }
+        const pageSize=localStorage.getItem('dynamicPagination');
+        console.log(pageSize);
         
     
        
         
-       axios.get(`http://localhost:3000/expense/getexpense?page=${page}`,{headers:{"Authorization":token}})
+       axios.get(`http://localhost:3000/expense/getexpense?page=${page}&pageSize=${pageSize}`,{headers:{"Authorization":token}})
        .then((result)=>{
                
                 console.log(result.data);
@@ -272,7 +282,7 @@ function showPagination({currentPage,hasNextPage,nextPage,hasPreviousPage,previo
     btn3.innerHTML=currentPage;
     btn3.addEventListener('click',()=> getExpense(currentPage));
     pagination.appendChild(btn3);
-    
+
     if(hasPreviousPage){
         const btn=document.createElement('button');
         btn.innerHTML=previousPage;
@@ -293,8 +303,9 @@ function showPagination({currentPage,hasNextPage,nextPage,hasPreviousPage,previo
 
 async function getExpense(page){
     try{list.innerHTML='';
+    const pageSize=localStorage.getItem('dynamicPagination');
         
-        const res=await axios.get(`http://localhost:3000/expense/getexpense?page=${page}`,{ headers: {"Authorization" : token} })
+        const res=await axios.get(`http://localhost:3000/expense/getexpense?page=${page}&pageSize=${pageSize}`,{ headers: {"Authorization" : token} })
         console.log(res);
         for(let i=0;i<res.data.user.length;i++){
         showpagination(res.data.user[i]);
