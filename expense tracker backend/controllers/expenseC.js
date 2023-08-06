@@ -4,6 +4,7 @@ const userTabel=require('../model/user');
 const sequelize=require('../util/database');
 const S3Service=require('../services/S3services');
 const fileDownloadTabel=require('../model/filedownloaded');
+const items_perpage=5;
 
 
 exports.addexpense= async (req,res,next)=>{
@@ -114,12 +115,22 @@ exports.updateexpense=(req,res,next)=>{
 
 exports.getexpense=(req,res,next)=>{
 console.log("helllo i am in get===="+req.user.id);
-   expense.findAll({where:{userId:req.user.id},attributes:['id','amount','description','category']})
+const page=+req.query.page||1;
+let totalItems;
+
+expense.count()
+.then((total)=>{
+    totalItems=total;
+    return expense.findAll({where:{userId:req.user.id},attributes:['id','amount','description','category']
+    ,offset:(page-1)*items_perpage,limit:items_perpage});
+
+
+})
     .then(userdata=>{
         console.log('users are====='+userdata)
         
 
-        return res.json({user:userdata});
+        return res.json({user:userdata,currentPage:page,hasNextPage:items_perpage*page<totalItems,nextPage:page+1,hasPreviousPage:page>1,previousPage:page-1,lastPage:Math.ceil(totalItems/items_perpage),});
     })
     .catch(err=>console.log(err));
 }

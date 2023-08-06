@@ -7,6 +7,8 @@ var list=document.querySelector('#list');
 let amount=document.querySelector('#amount');
 let description=document.querySelector('#des');
 let cat=document.querySelector('#category');
+const pagination=document.getElementById('pagination');
+let pagein;
 //const observer = new MutationObserver(at); 
 //observer.observe(document, { childList: true, subtree: true });
 
@@ -80,7 +82,7 @@ function showUsersOnScreen(data){
       <button onclick=editexpense("${data.id}", "${data.amount}", "${data.description}", "${data.category}")>Edit</button>
     </td>
   </tr>`;
-    
+  
     list.innerHTML=list.innerHTML+childHTML;
     
 
@@ -107,6 +109,7 @@ function updateexpense(id,obj){
 
 document.addEventListener('DOMContentLoaded',at)
 function at(){
+    const page=1;
     
     
         const token=localStorage.getItem('token');
@@ -148,23 +151,18 @@ function at(){
     
        
         
-       axios.get('http://localhost:3000/expense/getexpense',{headers:{"Authorization":token}})
+       axios.get(`http://localhost:3000/expense/getexpense?page=${page}`,{headers:{"Authorization":token}})
        .then((result)=>{
-               // console.log(result);
+               
                 console.log(result.data);
-                //console.log(result.data);
-    
-                //if(result.data.ispre==true){
-                    //onst premiumbtn=document.getElementById('premium');
-                    //premiumbtn.remove();
-    
-                //}
+            
     
                 
                 for(let i=0;i<result.data.user.length;i++){
                     
                     showUsersOnScreen(result.data.user[i]);
                 }
+                    showPagination(result.data);
                 
             })
         
@@ -265,6 +263,65 @@ function showfiles(url,date){
     parent.innerHTML=parent.innerHTML+list;
 
 }
+
+
+
+function showPagination({currentPage,hasNextPage,nextPage,hasPreviousPage,previousPage,lastPage}){
+    pagination.innerHTML='';
+    const btn3=document.createElement('button');
+    btn3.innerHTML=currentPage;
+    btn3.addEventListener('click',()=> getExpense(currentPage));
+    pagination.appendChild(btn3);
+    
+    if(hasPreviousPage){
+        const btn=document.createElement('button');
+        btn.innerHTML=previousPage;
+        btn.addEventListener('click',()=> getExpense(previousPage))
+        pagination.appendChild(btn);
+    }
+
+    if(hasNextPage)
+    {
+        const btn2=document.createElement('button');
+        btn2.innerHTML=nextPage;
+        btn2.addEventListener('click',()=> getExpense(nextPage));
+        pagination.appendChild(btn2);
+    }
+    
+
+}
+
+async function getExpense(page){
+    try{list.innerHTML='';
+        
+        const res=await axios.get(`http://localhost:3000/expense/getexpense?page=${page}`,{ headers: {"Authorization" : token} })
+        console.log(res);
+        for(let i=0;i<res.data.user.length;i++){
+        showpagination(res.data.user[i]);
+        
+    }
+    
+
+    }
+    catch(err){
+        console.log(err);
+    }
+    
+}
+function showpagination(data){
+    
+    const childHTML = `<tr id=${data.id}>
+    <td>${data.amount}</td>
+    <td>${data.description}</td>
+    <td>${data.category}</td>
+    <td>
+      <button onclick=deleteexpense("${data.id}")>Delete</button>
+      <button onclick=editexpense("${data.id}", "${data.amount}", "${data.description}", "${data.category}")>Edit</button>
+    </td>
+  </tr>`;
+  
+  list.innerHTML=list.innerHTML+childHTML;
+} 
 
 
 

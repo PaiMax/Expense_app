@@ -13,4 +13,5 @@ const file =sequelize.define('filedownloaded',{
     }
    
 });
+
 module.exports=file;
